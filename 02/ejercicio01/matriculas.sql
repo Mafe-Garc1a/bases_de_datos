@@ -14,6 +14,7 @@ CREATE TABLE imparte (
 dni CHAR(10), 
 asignatura CHAR(5),
 PRIMARY KEY (dni, asignatura),
+
 FOREIGN KEY (dni) REFERENCES profesores (dni),
 FOREIGN KEY (asignatura) REFERENCES asignaturas (codigo)
 ) ENGINE=InnoDB;
@@ -74,7 +75,7 @@ SELECT * FROM asignaturas WHERE creditosp IS NULL;
 SELECT 'La asignatura ', descripcion, ' tiene ', creditos, ' créditos' FROM asignaturas ORDER BY creditos;
 
 --PARA USO DE MAS DE UNA TABLAA
-SELECT nombre, descripcion FROM asignaturas, profesores; --NO ES ASI AUNQ FUNCIONR
+SELECT nombre, descripcion FROM asignaturas, profesores; --NO ES ASI AUNQ FUNCIONa nunca tilizar porq tiene 2 tablas
 SELECT nombre, descripcion FROM asignaturas, profesores, imparte WHERE imparte.dni
 = profesores.dni AND asignatura = código;
 
@@ -85,7 +86,7 @@ WHERE profesores.dni = imparte.dni AND asignatura = codigo;
 
 SELECT nombre, descripcion
 FROM asignaturas, profesores, imparte
-WHERE profesores.dni=imparte.dni AND asignatura=codigo;
+WHERE profesores.dni=imparte.dni AND asignatura=codigo; --VUELVE A COMETER EL ERROR PORQUE SELECCIONA 3 TABLAS
 
 --PARA INDICAR QUE UN VALOR ESTA ENTRE DOS COSAS CON EL BETWEEN
 SELECT creditos, descripción FROM asignaturas WHERE creditos BETWEEN 5 AND 8;
@@ -110,3 +111,6 @@ SELECT * FROM asignaturas WHERE creditos >(SELECT creditos FROM asignaturas WHER
 
 
 
+--CONSULTAS DINAMICAS <-MUY IMPORTANTES
+--WHERE SOLO COMPARA UN DATO NO VARIOS
+--in<- es entre  , este puede buscar varios datos , si puede con una lista
