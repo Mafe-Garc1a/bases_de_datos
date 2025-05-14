@@ -114,3 +114,18 @@ SELECT * FROM asignaturas WHERE creditos >(SELECT creditos FROM asignaturas WHER
 --CONSULTAS DINAMICAS <-MUY IMPORTANTES
 --WHERE SOLO COMPARA UN DATO NO VARIOS
 --in<- es entre  , este puede buscar varios datos , si puede con una lista
+
+
+
+
+--------REUNIONES JOIN---------------------------------
+SELECT * FROM asignaturas, profesores, imparte
+WHERE profesores.dni = imparte.dni AND asignatura = codigo;
+
+-- Estas consultas concatenan una tabla consigo misma:
+SELECT i1.dni, ' imparte la misma asignatura que ', i2.dni
+FROM imparte i1, imparte i2
+WHERE i1.asignatura= i2.asignatura;
+
+--join para no usar  planos cartesianos--
+SELECT nombre , descripcion FROM asignaturas    JOIN imparte ON (codigo=asignatura) JOIN profesores ON (imparte.dni=profesores.dni);

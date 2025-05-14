@@ -100,13 +100,114 @@
     MODIFY COLUMN nombre_columna nuevo _tipo;
 
     UPDATE movimientos 
+    --crear una consulta que tenga la descicion , tipo mpovimiento , valor , fecha, nombre y correo del usuario de todos los movimientos
+    SELECT descripcion,tipo_movimiento,valor,DATE(fecha_hora) AS fecha, nombre_usuario , correo FROM usuarios INNER JOIN movimientos ON id_usuario=usuario;
 
 
 
+
+
+
+    --CREAR UNA CONSULTA QUE TENGA NOMBRE Y ORREO DEL USUARIO , DE TODOS LOS USUARIO , TENGAN O NO MOVIMIENTO , SI TIENEN MOVIMIENTOS  LA DESCRIPCION TIPO_MOVIMIENT , VALOR Y FECHA
+
+    SELECT nombre_usuario,correo,descripcion,tipo_movimiento,valor, DATE(fecha_hora) AS fecha FROM usuarios LEFT JOIN movimientos ON id_usuario=usuario;
+
+    --CRAR UNA CONSULTA NOMBRE Y CORREO DE LOS USUARIOS QUE NO TENGAN MOVIMIENTOS
+    SELECT nombre_usuario,valor, DATEE(fecha_hora) AS tipo_movimiento
+ 
+
+
+    --CONSULTAR LOS MOVIMIENTOS Y ASI SUS USUARIOS TENGAN O NO MOVIMIENTOSS
+    
+    SELECT descripcion,tipo_movimiento,valor DATE(fecha_hora) AS fecha FROM usuarios RIGHT JOIN movimientos ON usuarios.id_usuario=movimientos.usuarios WHERE usuarios.id_usuario IS NULL;
+
+    --SE ONE UNION PARA QUE MUESTRE TODO YA Q MYSQL NO ENTIENDE FULL OUTER JOIN  , TOCA JUNTAR LEFT Y RIGHT
+    SELECT nombre_usuario ,correo ,descripcion , tipo_movimiento , valor ,DATE(fecha_hora) AS fecha FROM usuarios LEFT JOIN movimientos ON id_usuario=usuario 
+    UNION 
+    SELECT nombre_usuario , correo , descripcion , tipo_movimiento , valor, DATE(fecha_hora) AS fecha FROM usuarios RIGHT JOIN movimientos ON usuarios.id_usuario=movimientos.usuario WHERE usuarios.id_usuario IS NULL;
+-------------------------------------------------------------------
+    SELECT nombre_usuario ,correo ,descripcion , tipo_movimiento , valor ,DATE(fecha_hora) AS fecha FROM usuarios LEFT JOIN movimientos ON id_usuario=usuario where usuarios.id_usuario IS NULL
+    UNION 
+    SELECT nombre_usuario , correo , descripcion , tipo_movimiento , valor, DATE(fecha_hora) AS fecha FROM usuarios RIGHT JOIN movimientos ON usuarios.id_usuario=movimientos.usuario WHERE usuarios.id_usuario IS NULL;
+
+
+
+
+ ---------------------------------------------
     -- Insertar movimientos para usuarios 1 y 2
 -- Febrero, Marzo, Abril y Mayo
 -- 2 ingresos y 5 egresos por mes
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------
 -- INSERT INTO movimientos (descripcion, tipo_movimiento, valor, fecha_hora, estado, usuario) VALUES
 -- -- Usuario 1 - Febrero
 -- ('Ingreso salario febrero', 'ingreso', 3500000, '2025-02-05 08:30:00', 1, 1),
