@@ -53,3 +53,60 @@ VALUES('FBD','Fundamentos de las bases de datos',6.0,1.5),
 INSERT INTO imparte(dni,asignatura)
 VALUES(21115226,'DGBD'),
       (21114484,'PC');
+
+--CONSULTAS
+SELECT nombre FROM profesores WHERE categoria = 'TEU' ;
+
+SELECT nombre FROM profesores WHERE categoria = 'TEU' OR categoria = 'ASO6';
+
+SELECT creditos, descripcion FROM asignaturas
+ORDER BY creditos;
+--PARA ORDENARLO DE MANERA DESCENDENTE
+SELECT creditos, descripcion FROM asignaturas WHERE creditos > 4.5
+ORDER BY creditos DESC;
+
+SELECT creditos, descripcion FROM asignaturas ORDER BY creditos, descripcion;
+
+--DATOS NULOS 
+SELECT * FROM asignaturas WHERE creditosp IS NULL;
+
+--CONSTANTES
+SELECT 'La asignatura ', descripcion, ' tiene ', creditos, ' créditos' FROM asignaturas ORDER BY creditos;
+
+--PARA USO DE MAS DE UNA TABLAA
+SELECT nombre, descripcion FROM asignaturas, profesores; --NO ES ASI AUNQ FUNCIONR
+SELECT nombre, descripcion FROM asignaturas, profesores, imparte WHERE imparte.dni
+= profesores.dni AND asignatura = código;
+
+SELECT * FROM asignaturas, profesores, imparte;
+
+SELECT * FROM asignaturas, profesores, imparte
+WHERE profesores.dni = imparte.dni AND asignatura = codigo;
+
+SELECT nombre, descripcion
+FROM asignaturas, profesores, imparte
+WHERE profesores.dni=imparte.dni AND asignatura=codigo;
+
+--PARA INDICAR QUE UN VALOR ESTA ENTRE DOS COSAS CON EL BETWEEN
+SELECT creditos, descripción FROM asignaturas WHERE creditos BETWEEN 5 AND 8;
+--CREA UNA LISTA 
+SELECT descripcion FROM asignaturas WHERE codigo in ('FBD', 'DGBD');
+SELECT nombre FROM profesores p, imparte i WHERE p.dni = i.dniAND asignatura NOT IN ('HI', 'FBD', 'DGBD');
+
+--NUSCAR AOLGO CON '% %' COMO EN PHP
+SELECT * FROM profesores WHERE nombre LIKE '%RAFA%';
+SELECT codigo FROM asignaturas WHERE descripcion LIKE '%BASES DE DATOS%';
+SELECT codigo FROM asignaturas WHERE codigo LIKE ' '; --SE BUSCA ALGO CON 2 CARACTERTES
+SELECT descripcion FROM asignaturas WHERE descripcion LIKE '%INFORMATIC_';
+
+
+--CONSULTAS ANIDADAS 
+SELECT descripcion, creditos FROM asignaturas WHERE creditos = (SELECT MIN(creditos) FROM asignaturas);--CONSULTAS CON MENOS CREDITOS
+-- Asignaturas que tienen más créditos que la asignatura HI.
+SELECT * FROM asignaturas WHERE creditos >(SELECT creditos FROM asignaturas WHERE codigo = 'HI');
+
+
+
+
+
+
