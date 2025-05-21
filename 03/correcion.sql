@@ -30,3 +30,5 @@ SELECT articulo.cod , articulo.nombre ,articulo.pvp-linped.precio FROM articulo 
 -- T03.014- Número	de	pedido, fecha	y	nombre	y	apellidos	del	usuario	que	solicita	el	pedido,	
 -- para	aquellos pedidos	solicitados	por	algún	usuario	de	apellido	MARTINEZ
 SELECT pedido.numPedido , pedido.fecha , usuario.nombre , usuario.apellidos FROM pedido INNER JOIN usuario ON pedido.usuario=usuario.email  WHERE usuario.apellidos LIKE '%SANCHEZ%';
+-- Código,	nombre	y	marca	del	artículo	más	caro
+SELECT cod , nombre , marca
