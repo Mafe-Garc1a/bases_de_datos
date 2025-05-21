@@ -30,3 +30,7 @@ SELECT articulo.cod , articulo.nombre ,articulo.pvp-linped.precio FROM articulo 
 -- T03.014- Número	de	pedido, fecha	y	nombre	y	apellidos	del	usuario	que	solicita	el	pedido,	
 -- para	aquellos pedidos	solicitados	por	algún	usuario	de	apellido	MARTINEZ
 SELECT pedido.numPedido , pedido.fecha , usuario.nombre , usuario.apellidos FROM pedido INNER JOIN usuario ON pedido.usuario=usuario.email  WHERE usuario.apellidos LIKE '%SANCHEZ%';
+--  T03.015-Código,	nombre	y	marca	del	artículo	más	caro.
+SELECT cod , nombre , marca , pvp  FROM articulo WHERE pvp = (SELECT MAX(pvp) FROM articulo);
+-- T03.016- Nombre,	marca	y	resolución de	las	cámaras	que	nunca	se	han	solicitado
+SELECT articulo.nombre , marca.marca , camara.resolucion FROM articulo INNER JOIN marca INNER JOIN camara WHERE 
