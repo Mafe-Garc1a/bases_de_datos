@@ -180,8 +180,34 @@ WHERE pvp = (SELECT MAX(pvp) FROM articulo);
 SELECT pvp AS menor
 FROM articulo
 WHERE pvp = (SELECT MIN(pvp) FROM articulo);
-
-
+--forma correcta--
+SELECT MAX(pvp) - MIN(pvp) AS diferencia FROM articulo INNER JOIN linped ON articulo.cod = linped.articulo WHERE linped.numPedido = 30;
 --17-- 
+-- Fecha de nacimiento del usuario más viejo.
+SELECT MIN(nacido) AS fecha FROM usuario;
+--18---- ¿Cuántos artículos de cada marca hay?
+SELECT marca, COUNT(*) FROM articulo GROUP BY marca;
+--19-- ¿Cuáles son las marcas que tienen menos de 150 artículos (eliminar las marcas que sean null)?
+SELECT marca, COUNT(*) FROM articulo WHERE marca IS NOT NULL GROUP BY marca HAVING COUNT(*) < 150;
 
---18--
+--20-- Pedidos (número de pedido y usuario) con más de 10 artículos en un solo pedido, mostrando esta cantidad de artículos
+SELECT pedido.numPedido, pedido.usuario, COUNT(*) FROM linped INNER JOIN pedido ON linped.numPedido = pedido.numPedido GROUP BY pedido.numPedido, pedido.usuario HAVING COUNT(*) > 10;
+
+--21-- ¿Hay dos provincias que se llamen igual (con nombre repetido)?
+SELECT COUNT(DISTINCT nombre) FROM provincia WHERE nombre IN (SELECT nombre FROM provincia GROUP BY nombre HAVING COUNT(*) > 1);
+
+--22-- Clientes que hayan adquirido (pedido) más de 2 tv
+SELECT usuario.nombre, usuario.apellidos FROM usuario INNER JOIN pedido ON usuario.email = pedido.usuario INNER JOIN linped ON pedido.numPedido = linped.numPedido INNER JOIN tv ON linped.articulo = tv.cod WHERE tv.cod IS NOT NULL GROUP BY usuario.nombre HAVING COUNT(DISTINCT tv.cod) > 2;
+
+--23-- Código y nombre de las provincias que tienen más de 50 usuarios (provincia del usuario, no de la dirección de envío).
+SELECT usuario.provincia, provincia.nombre, COUNT(*) AS usuarios FROM usuario INNER JOIN provincia ON usuario.provincia = provincia.codp GROUP BY usuario.provincia, provincia.nombre HAVING COUNT(*) > 50;
+
+--24-- Código, nombre y marca de los objetivos con focales de 500 o 600 mm para las marcas de las que no se ha solicitó ningún artículo.
+SELECT objetivo.cod, articulo.nombre, articulo.marca FROM objetivo INNER JOIN articulo ON objetivo.cod = articulo.cod WHERE objetivo.focal IN (500, 600) AND articulo.cod NOT IN (SELECT articulo FROM linped);
+
+--25-- Código, nombre y marca de los artículos que tengan stock en cero o NULL y estén pedidos.
+SELECT articulo.cod, articulo.nombre, articulo.marca, stock.disponible FROM articulo INNER JOIN linped ON articulo.cod = linped.articulo INNER JOIN stock ON articulo.cod = stock.articulo WHERE sto
+ck.disponible = 0 OR stock.disponible IS NULL;
+
+
+
