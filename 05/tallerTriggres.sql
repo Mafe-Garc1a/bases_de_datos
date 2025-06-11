@@ -111,4 +111,4 @@ DELIMITER ;
 --Alterar tabla porque a la señorita rita le dio pereza ingresar un 0 y solo ingreso los nombres en empleados
 ALTER TABLE empleados 
 MODIFY total_ventas_dinero FLOAT(11,2) DEFAULT 0,
-MODIFY total_cant_productos_vendidos INT DEFAULT 0;
+MODIFY total_cant_productos INT DEFAULT 0;

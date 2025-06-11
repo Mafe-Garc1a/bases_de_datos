@@ -1,0 +1,4 @@
+----TRIGGERS-> QUE PERMITA insertar , modifcar y eliminar datos <-manipular datos que dependan de un EVENTO cuando pase algo e la tabla , no mporta q (actualizae inventario cuando se venda algo)
+---FUNCTION->CODIGO QUE SE VA A UTILÑIZAR EN VARIAS PARTES -trozos de codigo que necesite reutilizar
+---PROCEDIMIENTOS->CODIGO QUE REQUIERE PROCESOS ADICIONALES ANTES DE MANIPULAR LOS DATOS
+--parametros in->son los que entran      out->

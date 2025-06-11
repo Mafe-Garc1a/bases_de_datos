@@ -194,7 +194,7 @@ CREATE FUNCTION suma_n (numero INT)
 RETURN INT 
 BEGIN
     DECLARE contador INT DEFAULT 1;
-    DECLARE acumulador INT DEFAULT 1;
+    DECLARE acumulador INT DEFAULT 0;
 
     WHILE contador=5 DO
      SET acumulador=acumulador+(numero*contador);
@@ -202,6 +202,7 @@ BEGIN
     END  WHILE;
     RETURN acumulador;
 END;
+//
 DELIMITER ;
 
 
@@ -225,6 +226,7 @@ BEGIN
     SET nota_F=(nota1*0.20)+(nota2*0.30)+(nota3*0.50);
     return nota_F;
 END;
+//
 DELIMITER ;
 
  
@@ -294,3 +296,70 @@ WHERE competencia_2 > num;
 //
 DELIMITER ;
 CALL buscar_puntos(8);
+-- También podemos realizar procedimientos para Insertar datos.
+DELIMITER //
+CREATE PROCEDURE insertar_puntos(
+nuevo_id INT,
+nuevo_genero CHAR(1),
+nuevo_puntos_1 INT,
+nuevo_puntos_2 INT
+);
+
+INSERT INTO puntos (
+id_participante, genero, competencia_1, competencia_2)
+VALUES (
+nuevo_id, nuevo_genero, nuevo_puntos_1, nuevo_puntos_2);
+//
+DELIMITER ;
+-- Luego llamamos el procedimiento y le enviamos parámetros.
+CALL insertar_puntos(6,'F', 10, 10);
+SELECT * FROM puntos;
+-- Uso de parámetros IN, OUT
+DELIMITER //
+CREATE PROCEDURE genero_cantidad(IN letra CHAR(1), OUT cantidad INT)
+BEGIN
+SELECT * FROM puntos
+WHERE genero = letra;
+SELECT COUNT(*) INTO cantidad
+FROM puntos
+WHERE genero = letra;
+END
+//
+DELIMITER ;
+CALL genero_cantidad('M', @cantidad);
+SELECT @cantidad;
+-- Para eliminar un PROCEDIMIENTO se usa DROP PROCEDURE nombre.
+DROP PROCEDURE listar_tabla;
+-- Para observar la descripción de un PROCEDIMIENTO se usa SHOW CREATE PROCEDURE nombre.
+SHOW CREATE PROCEDURE genero_cantidad\G
+-- Ver Detalles de todos los Procedimientos Almacenados:
+SHOW PROCEDURE STATUS\G
+-- Ejercicio, Con las siguientes tablas.
+CREATE TABLE articulos (
+ id_articulo INT NOT NULL,
+ descripcion VARCHAR(30) NOT NULL,
+ precio FLOAT NULL,
+ auditoria DATETIME NOT NULL,
+ PRIMARY KEY (id_articulo)
+);
+INSERT INTO articulos VALUES(1, 'Leche 1L.', 2000, '2013-09-23 12:23:14');
+INSERT INTO articulos VALUES(2, 'Café 250 gr.', 2400, '2013-10-22 18:33:51');
+INSERT INTO articulos VALUES(3, 'Agua 5L.', 3900, '2013-10-01 20:16:36');
+INSERT INTO articulos VALUES(4, 'Galletas 200 gr.', 1000, '2013-08-11 
+10:03:54');
+CREATE TABLE novedades (
+ id_articulo INT NOT NULL,
+ descripcion VARCHAR(30) NOT NULL,
+ precio FLOAT DEFAULT NULL
+);
+INSERT INTO novedades VALUES(2, 'Café 250 gr.', 2500);
+INSERT INTO novedades VALUES(3, 'Agua 5L.', 4000);
+-- Programe un procedimiento que actualice el precio de los productos de la tabla artículos en función de 
+-- los precios que indica la tabla novedades
+
+
+----funciones son codigo q se va a repetir varias veces retorna datos 
+----procedimients es para consultas un procedimiento puede utiliza una funcion que hace lo mismo
+---un procedimiento se crea para consulta y hacer algo sin tener q acceder directamente a las bases de datos
+-----LA DIFERENCIA ES QUE LA FUNCION DEVUELVE UN VALOR Y EL PROCEDIMIENTO ES PARA INSERT,UPDATE,DELETE-----
+----SON UDOS PARA HACER PROCESOS----
