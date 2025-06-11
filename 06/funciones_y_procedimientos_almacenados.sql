@@ -162,6 +162,84 @@ FROM puntos WHERE id_participante = 1;
 
 SELECT competencia_1, competencia_2, suma_de_competencias(competencia_1, competencia_2) AS sumaComp 
 FROM puntos;
+-- Funciones con ciclos.
+-- Realizar una función que acepte un número y una potencia, ejecute la operación usando un ciclo y
+-- devuelva el resultado.
+
+DELIMITER //
+CREATE FUNCTION res_potencia(numero INT, potencia INT) RETURNS INT
+BEGIN
+DECLARE contador INT DEFAULT 1;
+DECLARE resultado INT DEFAULT 1;
+WHILE contador <= potencia DO
+ SET resultado = resultado * numero ;
+ SET contador = contador + 1;
+ END WHILE;
+RETURN resultado;
+END;
+//
+DELIMITER ;
+Llamamos la función enviando parámetros.
+SELECT res_potencia(2,3);
+SELECT res_potencia(3,3);
+SELECT res_potencia(2,4);
+
+
+-- Ejercicio, realizar una función que enviado un número, devuelva el
+-- resultado de sumar sus 5 primeros múltiplos, usando ciclos.
+-- Ejemplo si envió por parámetros el 7
+-- Resultado=(7*1)+7*2)+(7*3)+(7*4)+(7*5)
+DELIMITER //
+CREATE FUNCTION suma_n (numero INT)
+RETURN INT 
+BEGIN
+    DECLARE contador INT DEFAULT 1;
+    DECLARE acumulador INT DEFAULT 1;
+
+    WHILE contador=5 DO
+     SET acumulador=acumulador+(numero*contador);
+     SET contador=contador+1;
+    END  WHILE;
+    RETURN acumulador;
+END;
+DELIMITER ;
+
+
+-- Ejercicio, realizar una función que enviado tres notas de 0.0 a 5.0
+-- por parámetros, devuelva el resultado de la nota final, teniendo en
+-- cuenta que la nota1 vale el 20% la nota2 vale el 30% la nota3 vale
+-- 50]%.
+-- Ejemplo si envió por parámetros notas(4.5,3.0,4.7)
+-- La NotaFinal= 4.2
+-- Luego de Realizar la Función, utilizarla con un INSERT para completar
+-- la siguiente Tabla.
+DELIMITER //
+ CREATE FUNCTION NotaFinal(nota1 ,nota2,nota3)
+RETURN DECIMAL 
+BEGIN
+    DECLARE nota_F DECIMAL ;
+    -- SET nota1_p=nota1*0.20;
+    -- SET nota2_p=nota2*0.30;
+    -- SET nota3_p=nota3*0.50;
+    -- SET nota_F=nota1_p+nota2_p+nota3_p;
+    SET nota_F=(nota1*0.20)+(nota2*0.30)+(nota3*0.50);
+    return nota_F;
+END;
+DELIMITER ;
+
+ 
+CREATE TABLE nota (
+ id INT(4) PRIMARY KEY AUTO_INCREMENT,
+ nota1 FLOAT(2,1) DEFAULT 0,
+ nota2 FLOAT(2,1) DEFAULT 0,
+ nota3 FLOAT(2,1) DEFAULT 0,
+ final FLOAT(2,1) DEFAULT NULL
+ );
+INSERT INTO nota (nota1, nota2, nota3) VALUES(2.5,3.5,4.0);
+INSERT INTO nota (nota1, nota2, nota3) VALUES(4.5,5.0,4.0);
+INSERT INTO nota (nota1, nota2, nota3) VALUES(1.5,4.5,3.0);
+INSERT INTO nota (nota1, nota2, nota3) VALUES(3.5,3.8,4.4);
+INSERT INTO nota (nota1, nota2, nota3) VALUES(3.9,3.7,4.9);
 
 --BD EJEMPLO: 
 CREATE DATABASE rutinas1;
@@ -178,3 +256,41 @@ INSERT INTO puntos VALUES(2,'F', 6, 8);
 INSERT INTO puntos VALUES(3,'M', 9, 9);
 INSERT INTO puntos VALUES(4,'F', 10, 7);
 INSERT INTO puntos VALUES(5,'M', 9, 10);
+
+
+
+------------------------Procedimientos--------------------------
+-- Son también bloques de código que a diferencia de las funciones no devuelven ningún valor. Bajo esta
+-- premisa su cometido es ligeramente distinto, puesto que no espera un resultado tras finalizar su
+-- ejecución, aunque las acciones que haga el procedimiento y las posibles modificaciones de los datos
+-- que realice puedan verse como el resultado de su ejecución.
+-- Sirven para realizar tareas (agregar, modificar o borrar registros), o devolver resultados en forma de
+-- tablas.
+
+-- Primero creamos el procedimiento.
+DELIMITER //
+CREATE PROCEDURE listar_tabla ()
+SELECT * FROM puntos;
+//
+DELIMITER ;
+-- Luego llamamos el procedimiento con el comando CALL
+CALL listar_tabla;
+
+-- Procedimiento con parámetros,
+DELIMITER //
+CREATE PROCEDURE consultar_puntos2 (p_id INT)
+SELECT * FROM puntos
+WHERE id_participante = p_id OR p_id is NULL;
+//
+-- DELIMITER ;
+-- Hacemos la llamada al procedimiento enviamos parámetros.
+CALL consultar(NULL);
+CALL consultar(3);
+-- Podemos usar cualquier tipo de consulta.
+DELIMITER //
+CREATE PROCEDURE buscar_puntos(num INT)
+SELECT * FROM puntos
+WHERE competencia_2 > num;
+//
+DELIMITER ;
+CALL buscar_puntos(8);
