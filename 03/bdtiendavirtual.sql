@@ -12,11 +12,10 @@ SELECT usuario.nombre, usuario.email, usuario.provincia, provincia.nombre FROM u
 INNER JOIN provincia ON usuario.provincia = provincia.codp
 
 -- Volcando estructura de base de datos para tiendaonline
-DROP DATABASE IF EXISTS `tiendaonline`;
-CREATE DATABASE IF NOT EXISTS `tiendaonline`;
-USE `tiendaonline`;
 
 
+
+----2----
 -- Volcando estructura para tabla tiendaonline.articulo
 DROP TABLE IF EXISTS `articulo`;
 CREATE TABLE IF NOT EXISTS `articulo` (
@@ -1327,7 +1326,7 @@ INSERT INTO `articulo` (`cod`, `nombre`, `pvp`, `marca`, `imagen`, `urlimagen`, 
 	('A1290', 'SDHC-SD4/32GB', 31.47, 'KINGSTON', NULL, NULL, NULL);
 /*!40000 ALTER TABLE `articulo` ENABLE KEYS */;
 
-
+-----3---
 -- Volcando estructura para tabla tiendaonline.camara
 DROP TABLE IF EXISTS `camara`;
 CREATE TABLE IF NOT EXISTS `camara` (
@@ -1644,7 +1643,7 @@ INSERT INTO `camara` (`cod`, `resolucion`, `sensor`, `tipo`, `factor`, `objetivo
 	('A0295', '4288 x 2848', 'CMOS de 12,84 MP (efectivos:12,40 MP)', 'réflex, objetivos intercambiables', '1,50x', NULL, 'TFT de 2,50 pulgadas', NULL);
 /*!40000 ALTER TABLE `camara` ENABLE KEYS */;
 
-
+---13---
 -- Volcando estructura para tabla tiendaonline.cesta
 DROP TABLE IF EXISTS `cesta`;
 CREATE TABLE IF NOT EXISTS `cesta` (
@@ -1676,7 +1675,7 @@ INSERT INTO `cesta` (`articulo`, `usuario`, `fecha`) VALUES
 	('A1077', 'jra@colegas.com', '2010-11-01 00:00:00');
 /*!40000 ALTER TABLE `cesta` ENABLE KEYS */;
 
-
+---14---
 -- Volcando estructura para tabla tiendaonline.direnvio
 DROP TABLE IF EXISTS `direnvio`;
 CREATE TABLE IF NOT EXISTS `direnvio` (
@@ -1700,7 +1699,7 @@ INSERT INTO `direnvio` (`email`, `calle`, `calle2`, `codpos`, `pueblo`, `provinc
 	('pge@colegas.com', 'AC/DC, 3, 5ª dcha.', NULL, '28914', '0745', '28');
 /*!40000 ALTER TABLE `direnvio` ENABLE KEYS */;
 
-
+---16--
 -- Volcando estructura para tabla tiendaonline.linped
 DROP TABLE IF EXISTS `linped`;
 CREATE TABLE IF NOT EXISTS `linped` (
@@ -1888,7 +1887,7 @@ INSERT INTO `linped` (`numPedido`, `linea`, `articulo`, `precio`, `cantidad`) VA
 	(36, 11, 'A1257', 140.42, 1);
 /*!40000 ALTER TABLE `linped` ENABLE KEYS */;
 
-
+----11---
 -- Volcando estructura para tabla tiendaonline.localidad
 DROP TABLE IF EXISTS `localidad`;
 CREATE TABLE IF NOT EXISTS `localidad` (
@@ -10015,7 +10014,7 @@ INSERT INTO `localidad` (`codm`, `pueblo`, `provincia`) VALUES
 	('9158', 'Ziortza-Bolibar', '48');
 /*!40000 ALTER TABLE `localidad` ENABLE KEYS */;
 
-
+-------1------
 -- Volcando estructura para tabla tiendaonline.marca
 DROP TABLE IF EXISTS `marca`;
 CREATE TABLE IF NOT EXISTS `marca` (
@@ -10043,7 +10042,7 @@ INSERT INTO `marca` (`marca`, `empresa`, `logo`) VALUES
 	('TRANSCEND', NULL, NULL);
 /*!40000 ALTER TABLE `marca` ENABLE KEYS */;
 
-
+------4---
 -- Volcando estructura para tabla tiendaonline.memoria
 DROP TABLE IF EXISTS `memoria`;
 CREATE TABLE IF NOT EXISTS `memoria` (
@@ -10115,7 +10114,7 @@ INSERT INTO `memoria` (`cod`, `tipo`) VALUES
 	('A1290', ' Secure Digital');
 /*!40000 ALTER TABLE `memoria` ENABLE KEYS */;
 
-
+-----5---
 -- Volcando estructura para tabla tiendaonline.objetivo
 DROP TABLE IF EXISTS `objetivo`;
 CREATE TABLE IF NOT EXISTS `objetivo` (
@@ -10523,7 +10522,7 @@ INSERT INTO `objetivo` (`cod`, `tipo`, `montura`, `focal`, `apertura`, `especial
 	('A0684', 'supertele fijo', 'Pentax', '600 mm', 'f8', 'Elementos especiales:');
 /*!40000 ALTER TABLE `objetivo` ENABLE KEYS */;
 
-
+------6---
 -- Volcando estructura para tabla tiendaonline.pack
 DROP TABLE IF EXISTS `pack`;
 CREATE TABLE IF NOT EXISTS `pack` (
@@ -10540,7 +10539,7 @@ INSERT INTO `pack` (`cod`) VALUES
 	('A1234');
 /*!40000 ALTER TABLE `pack` ENABLE KEYS */;
 
-
+----15----
 -- Volcando estructura para tabla tiendaonline.pedido
 DROP TABLE IF EXISTS `pedido`;
 CREATE TABLE IF NOT EXISTS `pedido` (
@@ -10608,7 +10607,7 @@ INSERT INTO `pedido` (`numPedido`, `usuario`, `fecha`) VALUES
 	(51, 'bmm@agwab.com', '2010-10-20 00:00:00');
 /*!40000 ALTER TABLE `pedido` ENABLE KEYS */;
 
-
+------7---
 -- Volcando estructura para tabla tiendaonline.provincia
 DROP TABLE IF EXISTS `provincia`;
 CREATE TABLE IF NOT EXISTS `provincia` (
@@ -10674,7 +10673,7 @@ INSERT INTO `provincia` (`codp`, `nombre`) VALUES
 	('52', 'Melilla');
 /*!40000 ALTER TABLE `provincia` ENABLE KEYS */;
 
-
+----8---
 -- Volcando estructura para tabla tiendaonline.ptienea
 DROP TABLE IF EXISTS `ptienea`;
 CREATE TABLE IF NOT EXISTS `ptienea` (
@@ -10697,7 +10696,7 @@ INSERT INTO `ptienea` (`pack`, `articulo`) VALUES
 	('A1234', 'A1290');
 /*!40000 ALTER TABLE `ptienea` ENABLE KEYS */;
 
-
+----9-----
 -- Volcando estructura para tabla tiendaonline.stock
 DROP TABLE IF EXISTS `stock`;
 CREATE TABLE IF NOT EXISTS `stock` (
@@ -10837,7 +10836,7 @@ INSERT INTO `stock` (`articulo`, `disponible`, `entrega`) VALUES
 	('A1091', 86, '24 horas');
 /*!40000 ALTER TABLE `stock` ENABLE KEYS */;
 
-
+------10----
 -- Volcando estructura para tabla tiendaonline.tv
 DROP TABLE IF EXISTS `tv`;
 CREATE TABLE IF NOT EXISTS `tv` (
@@ -11405,7 +11404,7 @@ INSERT INTO `tv` (`cod`, `panel`, `pantalla`, `resolucion`, `hdreadyfullhd`, `td
 	('A1233', 'retroproyector DLP', 50, '1280 x 720', '/no', 0);
 /*!40000 ALTER TABLE `tv` ENABLE KEYS */;
 
-
+----12----
 -- Volcando estructura para tabla tiendaonline.usuario
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (

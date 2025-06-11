@@ -1,0 +1,31 @@
+TRIGGERS 
+En los TRIGGERS se pueden declarar variables pero siempre se declaran al inicio del BEGIN, nunca dentro del IF ni nada, siempre al inicio de inicial BEGING 
+
+De está manera: BEGIN 
+			DECLARE VAR1 INT;
+			DECLARE VAR2 DATE; 
+			DECLARE VAR3 VARCHAR(10); 
+
+SET es para darle un valor a esa variable como por ejemplo:
+SET VAR1 = SELECT SUM(cont) FROM....
+SELECT fecha INTO VAR2 FROM...(aquí se le dice q seleccione del campo fecha y que se lo INSERTE a la variable VAR2)
+
+ 
+SHOW TABLES;
+DESCRIBE nom_table;
+
+IF NEW.tipo_movimiento = 'Compra' THEN 
+	DECLARE suma INT 
+	SET suma = NEW.cantidad
+	UPDATE productos SET stock = stock + suma
+ELSE
+
+SI venta pasa a ser "compra" = sumo el venta OLD y el compra NEW con lo que quedo en stock 
+
+total_stock + old.movimientio + new.movimiento
+
+SI compra pasa a ser "venta" = 
+total_stock - old.movimiento - new.movimiento
+
+FUNCIONES Y PROCEDIMIENTOS
+	

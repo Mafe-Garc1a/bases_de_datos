@@ -29,10 +29,10 @@ DELIMITER //
 CREATE TRIGGER sum_saldo AFTER INSERT ON consigna
  FOR EACH ROW
  BEGIN
-    IF ( SELECT COUNT(nuevo_saldo) FROM saldo) > 0 THEN ---le estoy diciendo q si lo que hya en saldo es mayor a 0 pueda ingresar
+    IF ( SELECT COUNT(nuevo_saldo) FROM saldo) > 0 THEN /*---le estoy diciendo q si lo que hya en saldo es mayor a 0 pueda ingresar*/
         UPDATE saldo SET nuevo_saldo = nuevo_saldo + 
         NEW.cantidad WHERE cod = 1;
-    ELSE                                            ---sino q inserte la cantidad de la consigna
+    ELSE                                           /* ---sino q inserte la cantidad de la consigna*/
         INSERT INTO saldo (nuevo_saldo) 
         VALUES ((SELECT SUM(cantidad) FROM consigna));
     END IF;
@@ -77,7 +77,7 @@ SELECT * FROM detalle_factura;
 
 -- Para INSERT.---
 DELIMITER //
-    CREATE TRIGGER inserto BEFORE INSERT ON detalle_factura --para q se inserte el drtalle factura por si no era la catidad deseada
+    CREATE TRIGGER inserto BEFORE INSERT ON detalle_factura /*--para q se inserte el drtalle factura por si no era la catidad deseada*/
     FOR EACH ROW
     BEGIN
         SET NEW.total_detalle = NEW.precio * NEW.cantidad;
@@ -94,9 +94,9 @@ DELIMITER //
     CREATE TRIGGER borro AFTER DELETE ON detalle_factura
     FOR EACH ROW
     BEGIN
-        UPDATE factura  --q modifique la tabla factura
-        SET total_factura = total_factura - OLD.total_detalle -- borrar todo lo q habia antes segun el detalle de la factura para q se actualice y se borre 
-    WHERE id_factura = OLD.id_factura; -- donde indice de la factura sea igual al q habia antes de actualizar
+        UPDATE factura  /*--q modifique la tabla factura*/
+        SET total_factura = total_factura - OLD.total_detalle /*-- borrar todo lo q habia antes segun el detalle de la factura para q se actualice y se borre */
+    WHERE id_factura = OLD.id_factura; /*-- donde indice de la factura sea igual al q habia antes de actualizar*/
  END
 //
 DELIMITER ;
@@ -111,11 +111,11 @@ CREATE TRIGGER actualizo BEFORE UPDATE ON detalle_factura
 -- declaración de variable
 DECLARE v_variacion FLOAT;
 -- calculos
-SET NEW.total_detalle = NEW.precio * NEW.cantidad; --para que se actualice el detalle , (digamos q si la persona comra algo mas)
-SET v_variacion = NEW.total_detalle - OLD.total_detalle;--resta lo q habia antes con lo q hay ahora para q no se genere error en la factura y se cobre mas
+SET NEW.total_detalle = NEW.precio * NEW.cantidad; /*--para que se actualice el detalle , (digamos q si la persona comra algo mas)*/
+SET v_variacion = NEW.total_detalle - OLD.total_detalle;/*--resta lo q habia antes con lo q hay ahora para q no se genere error en la factura y se cobre mas*/
 -- actualizamos el total factura
 UPDATE factura 
-SET total_factura = total_factura + v_variacion--ahora se actualiz el total de la factura 
+SET total_factura = total_factura + v_variacion/*--ahora se actualiz el total de la factura */
 WHERE id_factura = NEW.id_factura;
  END
 //
