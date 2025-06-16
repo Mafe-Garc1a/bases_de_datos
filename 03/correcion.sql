@@ -30,4 +30,13 @@ SELECT articulo.cod , articulo.nombre ,articulo.pvp-linped.precio FROM articulo 
 -- T03.014- Número	de	pedido, fecha	y	nombre	y	apellidos	del	usuario	que	solicita	el	pedido,	
 -- para	aquellos pedidos	solicitados	por	algún	usuario	de	apellido	MARTINEZ
 SELECT pedido.numPedido , pedido.fecha , usuario.nombre , usuario.apellidos FROM pedido INNER JOIN usuario ON pedido.usuario=usuario.email  WHERE usuario.apellidos LIKE '%SANCHEZ%';
-
+--T03.015-	Código,	nombre	y	marca	del	artículo	más	caro.	
+SELECT cod , nombre , marca , pvp FROM articulo WHERE  pvp=(SELECT max(pvp) FROM articulo);
+--T03.016-	Nombre,	marca	y	resolución	de	las	cámaras	que	nunca	se	han	solicitado.	
+SELECT articulo.nombre , articulo.marca , camara.resolucion FROM articulo INNER JOIN camara ON articulo.cod=camara.cod RIGHT JOIN linped ON articulo.cod = linped.articulo WHERE articulo,cod!=linped.articulo;--NO HE ODIDO
+--T03.017-	Código,	nombre,	tipo	y	marca	de	las	cámaras	de	marca	Nikon,	LG	o	Sigma.	
+SELECT camara.cod , articulo.nombre , camara.tipo , articulo.marca FROM camara INNER JOIN articulo ON articulo.cod=camara.cod  WHERE articulo.marca IN('Nikon' , 'LG' , 'Sigma');
+--T03.018-	Código,	nombre	y	pvp	de	la	cámara	más	cara	de	entre	las	de	tipo	réflex.	
+SELECT camara.cod , articulo.nombre ,camara.tipo , articulo.pvp FROM camara INNER JOIN articulo ON articulo.cod =camara.cod WHERE pvp=(SELECT MAX(PVP) FROM articulo);-- AND camara.tipo IN('réflex');
+--T03.019-	Marcas	de	las	que	no	existe	ningún	televisor	en	nuestra	base	de	datos.
+SELECT  marca  FROM  marca INNER JOIN articulo ON
