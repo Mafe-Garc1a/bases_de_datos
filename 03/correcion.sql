@@ -39,4 +39,22 @@ SELECT camara.cod , articulo.nombre , camara.tipo , articulo.marca FROM camara I
 --T03.018-	Código,	nombre	y	pvp	de	la	cámara	más	cara	de	entre	las	de	tipo	réflex.	
 SELECT camara.cod , articulo.nombre ,camara.tipo , articulo.pvp FROM camara INNER JOIN articulo ON articulo.cod =camara.cod WHERE pvp=(SELECT MAX(PVP) FROM articulo);-- AND camara.tipo IN('réflex');
 --T03.019-	Marcas	de	las	que	no	existe	ningún	televisor	en	nuestra	base	de	datos.
-SELECT  marca  FROM  marca INNER JOIN articulo ON
+SELECT marca.marca FROM marca  WHERE NOT EXISTS (SELECT 1  FROM articulo INNER JOIN tv ON articulo.cod=tv.cod WHERE articulo.marca =marca.marca);
+--T03.020-	Código,	nombre	y	disponibilidad	de	los	artículos	con	menor	disponibilidad	de	entre	los	que	pueden	estar	disponibles	en	24	horas.	
+SELECT articulo.cod , articulo.nombre ,stock.entrega FROM articulo INNER JOIN stock ON articulo.cod=stock.articulo WHERE stock.entrega="24 horas";
+--T03.021-	Nombre	de	los	artículos	cuyo	nombre	contenga	la	palabra	EOS
+SELECT nombre FROM articulo WHERE nombre LIKE '%EOS%';
+--T03.022-	Tipo	y	focal	de	los	objetivos	que	se	monten	en	una	cámara	Canon	sea	cual	sea	el	modelo.	
+SELECT objetivo.tipo , objetivo.focal FROM objetivo INNER JOIN articulo ON articulo.cod=objetivo.cod  WHERE articulo.marca='canon';
+--T03.023-	Nombre	de	los	artículos	cuyo	precio	sea	mayor	de	100	pero	menor	o	igual	que	200.	
+SELECT nombre  , pvp FROM articulo WHERE pvp>100 AND pvp<=200;
+--T03.024-	Nombre	de	los	artículos	cuyo	precio	sea	mayor	o	igual	que	100	pero	menor	o	igual	que	300.	
+SELECT nombre  , pvp FROM articulo WHERE pvp>100 AND pvp<=300;
+--T03.025-	Nombre	de	las	cámaras	cuya	marca	no	comience	por	la	letra	S.
+SELECT articulo.nombre  FROM articulo INNER JOIN camara ON camara.cod=articulo.cod WHERE articulo.marca NOT LIKE 'S%';
+--T04.001-	Toda	la	información	de	los	pedidos	anteriores	a	octubre	de	2010.	
+SELECT pedido.numPedido , pedido.usuario , pedido.fecha , linped.articulo , linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON pedido.numPedido=linped.numPedido WHERE  YEAR(pedido.fecha)<='2010' AND MONTH(pedido.fecha)<='10';
+--04.002-	Toda	la	información	de	los	pedidos	posteriores	a	agosto	de	2010.
+SELECT pedido.numPedido , pedido.usuario , pedido.fecha ,linped.articulo ,linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON pedido.numPedido=linped.numPedido WHERE  YEAR(pedido.fecha)>='2010' AND MONTH(pedido.fecha)>='08';
+--T04.003-	Toda	la	información	de	los	pedidos	realizados	entre	agosto	y	octubre	de	2010.
+SELECT pedido.numPedido , pedido.usuario , pedido.fecha ,linped.articulo ,linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON linped.numPedido=pedido.numPedido WHERE MONTH(pedido.fecha)>='08' AND MONTH(pedido.fecha)<='10' AND YEAR(pedido.fecha)='2010' ORDER by numPedido ;
