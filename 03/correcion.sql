@@ -63,7 +63,8 @@ SELECT pedido.numPedido , pedido.usuario , pedido.fecha ,linped.articulo ,linped
 --T04.005-	Toda	la	información	de	los	pedidos	realizados	el	3	de	marzo	o	el	27	de	octubre	de	2010,	y	que	han	sido	realizados	por	usuarios	del	dominio	"cazurren"	
 SELECT pedido.numPedido , pedido.usuario , pedido.fecha , linped.articulo , linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON linped.numPedido=pedido.numPedido WHERE DAY(pedido.fecha)='03'AND MONTH(pedido.fecha)='03' OR DAY(pedido.fecha)='27' AND MONTH(pedido.fecha)='10' AND YEAR(pedido.fecha)='2010' AND pedido.usuario LIKE '%@cazurren%';
 --T04.006-	¿En	qué	día	y	hora	vivimos?	
-SELECT CURDATE() AS fecha , CURTIME() AS hora;
+S
+
 -- T04.007-	21	de	febrero	de	2011	en	formato	dd/mm/aaaa	
 SELECT numPedido, DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha
 FROM pedido
@@ -126,10 +127,10 @@ ORDER BY semana;
 
 -- Si da 9110 días → 9110 / 365 ≈ 24.9 → FLOOR(24.9) → 24 años
 SELECT nombre, apellidos,
-       FLOOR(DATEDIFF(CURDATE(), fechaNac)/365) AS edad
+       FLOOR(DATEDIFF(CURDATE(), nacido)/365) AS edad
 FROM usuario
 WHERE email LIKE '%@dlsi.ua.es'
-ORDER BY edad DESC;
+ORDER BY edad ;
 
 -- T04.016-	Email	y	cantidad	de	días	que	han	pasado	desde	los	pedidos	realizados	por	cada	usuario	hasta	la	fecha	de	cada	cesta	que	también	sea	suya.	Eliminad	duplicados.	
 SELECT DISTINCT u.email,
@@ -153,9 +154,9 @@ WHERE WEEK(fecha, 1) = WEEK('2010-11-07', 1) AND YEAR(fecha) = 2010;
 -- T04.019-	Código,	nombre,	panel	y	pantalla	de	los	televisores	que	no	se	hayan	solicitado	ni	en	lo	que	va	de	año,	ni	en	los	últimos	seis	meses	del	año	pasado.	
 SELECT a.cod, a.nombre, t.panel, t.pantalla
 FROM articulo a
-JOIN televisor t ON a.cod = t.cod
+JOIN tv t ON a.cod = t.cod
 WHERE a.cod NOT IN (
-  SELECT DISTINCT articulo
+  SELECT DISTINCT articulo 
   FROM linped
   JOIN pedido ON linped.numPedido = pedido.numPedido
   WHERE (YEAR(fecha) = YEAR(CURDATE())) 

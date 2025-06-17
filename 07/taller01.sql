@@ -80,5 +80,7 @@ BEGIN
 END;
 //
 DELIMITER ;
+INSERT INTO(id_empleado,id_producto)VALUES(p_id_empleado,p_id_producto);
+CALL insertar_venta(1,3);
 
 
