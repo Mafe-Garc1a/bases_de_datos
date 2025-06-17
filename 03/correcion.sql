@@ -64,3 +64,160 @@ SELECT pedido.numPedido , pedido.usuario , pedido.fecha ,linped.articulo ,linped
 SELECT pedido.numPedido , pedido.usuario , pedido.fecha , linped.articulo , linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON linped.numPedido=pedido.numPedido WHERE DAY(pedido.fecha)='03'AND MONTH(pedido.fecha)='03' OR DAY(pedido.fecha)='27' AND MONTH(pedido.fecha)='10' AND YEAR(pedido.fecha)='2010' AND pedido.usuario LIKE '%@cazurren%';
 --T04.006-	¿En	qué	día	y	hora	vivimos?	
 SELECT CURDATE() AS fecha , CURTIME() AS hora;
+-- T04.007-	21	de	febrero	de	2011	en	formato	dd/mm/aaaa	
+SELECT numPedido, DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha
+FROM pedido
+WHERE DATE(fecha) = '2011-02-21';
+
+-- T04.008-	31	de	febrero	de	2011	en	formato	dd/mm/aaaa	
+-- No habrá resultados porque la fecha no es válida.
+SELECT numPedido, DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha
+FROM pedido
+WHERE DATE(fecha) = '2011-02-31';
+
+-- T04.009-	Pedidos	realizados	el	13.9.2010	(este	formato,	obligatorio	en	la	comparación).
+SELECT numPedido
+FROM pedido
+WHERE DATE_FORMAT(fecha, '%e.%c.%Y') = '13.9.2010';
+
+-- T04.010-	Numero	y	fecha	de	los	pedidos	realizados	el	13.9.2010	(este	formato,	obligatorio	tanto	en	la	comparación	como	en	la	salida).	
+SELECT numPedido, DATE_FORMAT(fecha, '%e.%c.%Y') AS fecha
+FROM pedido
+WHERE DATE_FORMAT(fecha, '%e.%c.%Y') = '13.9.2010';
+
+-- T04.011-	Numero,	fecha,	y	email	de	cliente	de	los	pedidos	(formato	dd.mm.aa)	ordenadoDescendente	por	fecha	y	ascendentemente	por	cliente.	
+SELECT numPedido, DATE_FORMAT(fecha, '%d.%m.%y') AS fecha, usuario AS email
+FROM pedido
+ORDER BY fecha DESC, usuario ASC;
+
+-- T04.012-	Códigos	de	artículos	solicitados	en	2010,	eliminando	duplicados	y	ordenado	ascendentemente.
+SELECT DISTINCT articulo
+FROM linped
+JOIN pedido ON linped.numPedido = pedido.numPedido
+WHERE YEAR(pedido.fecha) = 2010
+ORDER BY articulo ASC;
+
+-- T04.013-	Códigos	de	artículos	solicitados	en	pedidos	de	marzo	de	2010,	eliminando	duplicados	y	ordenado	ascendentemente.	
+SELECT DISTINCT articulo
+FROM linped
+JOIN pedido ON linped.numPedido = pedido.numPedido
+WHERE MONTH(pedido.fecha) = 3 AND YEAR(pedido.fecha) = 2010
+ORDER BY articulo ASC;
+
+-- T04.014-	Códigos	de	artículos	solicitados	en	pedidos	de	septiembre	de	2010,	y	semana	del	año	(la	semana	comienza	en	lunes)	y	año	del	pedido,	ordenado	por	semana.	
+SELECT DISTINCT articulo,
+       WEEK(pedido.fecha, 1) AS semana,
+       YEAR(pedido.fecha) AS anio
+FROM linped
+JOIN pedido ON linped.numPedido = pedido.numPedido
+WHERE MONTH(pedido.fecha) = 9 AND YEAR(pedido.fecha) = 2010
+ORDER BY semana;
+
+-- T04.015-	Nombre,	apellidos	y	edad	(aproximada)	de	los	usuarios	del	dominio	"dlsi.ua.es",	ordenado	descendentemente	por	edad.	
+
+
+--DATEDIFF: es una función de MySQL que calcula la diferencia en días entre dos fechas.
+
+--FLOOR redondea hacia abajo el número resultante.
+
+-- Por ejemplo:
+
+-- Si DATEDIFF da 9125 días → 9125 / 365 = 25.0 → FLOOR(25.0) → 25 años
+
+-- Si da 9110 días → 9110 / 365 ≈ 24.9 → FLOOR(24.9) → 24 años
+SELECT nombre, apellidos,
+       FLOOR(DATEDIFF(CURDATE(), fechaNac)/365) AS edad
+FROM usuario
+WHERE email LIKE '%@dlsi.ua.es'
+ORDER BY edad DESC;
+
+-- T04.016-	Email	y	cantidad	de	días	que	han	pasado	desde	los	pedidos	realizados	por	cada	usuario	hasta	la	fecha	de	cada	cesta	que	también	sea	suya.	Eliminad	duplicados.	
+SELECT DISTINCT u.email,
+       DATEDIFF(c.fecha, p.fecha) AS dias_diferencia
+FROM usuario u
+JOIN pedido p ON u.email = p.usuario
+JOIN cesta c ON u.email = c.usuario
+WHERE c.fecha >= p.fecha;
+
+-- T04.017-	Información	sobre	los	usuarios	menores	de	25	años.	
+SELECT *
+FROM usuario
+WHERE TIMESTAMPDIFF(YEAR, fechaNac, CURDATE()) < 25;
+
+-- T04.018-	Número	de	pedido,	usuario	y	fecha	(dd/mm/aaaa)	al	que	se	le	solicitó	para	los	pedidos	que	se	realizaron	durante	la	semana	del	7	de	noviembre	de	2010.	
+SELECT numPedido, usuario,
+       DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha
+FROM pedido
+WHERE WEEK(fecha, 1) = WEEK('2010-11-07', 1) AND YEAR(fecha) = 2010;
+
+-- T04.019-	Código,	nombre,	panel	y	pantalla	de	los	televisores	que	no	se	hayan	solicitado	ni	en	lo	que	va	de	año,	ni	en	los	últimos	seis	meses	del	año	pasado.	
+SELECT a.cod, a.nombre, t.panel, t.pantalla
+FROM articulo a
+JOIN televisor t ON a.cod = t.cod
+WHERE a.cod NOT IN (
+  SELECT DISTINCT articulo
+  FROM linped
+  JOIN pedido ON linped.numPedido = pedido.numPedido
+  WHERE (YEAR(fecha) = YEAR(CURDATE())) 
+     OR (fecha BETWEEN DATE_SUB(DATE_FORMAT(CURDATE(), '%Y-01-01'), INTERVAL 6 MONTH)
+                  AND LAST_DAY(DATE_SUB(DATE_FORMAT(CURDATE(), '%Y-01-01'), INTERVAL 1 MONTH)))
+);
+
+-- T04.020-	Email	y	cantidad	de	días	que	han	pasado	desde	los	pedidos	realizados	por	cada	usuario	hasta	la	fecha	de	cada	artículo	que	ahora	mismo	hay	en	su	cesta.	Eliminad	 duplicados.
+SELECT DISTINCT u.email,
+       DATEDIFF(c.fecha, p.fecha) AS dias_diferencia
+FROM usuario u
+JOIN pedido p ON u.email = p.usuario
+JOIN cesta c ON u.email = c.usuario
+WHERE EXISTS (
+  SELECT 1
+  FROM contiene
+  WHERE contiene.cesta = c.id
+);
+
+-- T05.001-	Número	de	pedido	e	identificador,	apellidos	y	nombre	del	usuario	que	realiza	el	 pedido	(usando	join).
+SELECT p.numPedido, u.email, u.apellidos, u.nombre
+FROM pedido p
+JOIN usuario u ON p.usuario = u.email;
+
+-- T05.002-	Número	de	pedido	e	identificador,	apellidos	y	nombre	del	usuario	que	realiza	el	
+-- pedido,	y	nombre	de	la	localidad	del	usuario	(usando	join).	
+SELECT p.numPedido, u.email, u.apellidos, u.nombre, l.nombre AS localidad
+FROM pedido p
+JOIN usuario u ON p.usuario = u.email
+JOIN localidad l ON u.localidad = l.codLoc;
+
+-- T05.003-	Número	de	pedido	e	identificador,	apellidos	y	nombre	del	usuario	que	realiza	el	
+-- pedido,	nombre	de	la	localidad	y	nombre	de	la	provincia	del	usuario	(usando	join).	
+SELECT p.numPedido, u.email, u.apellidos, u.nombre, l.nombre AS localidad, pr.nombre AS provincia
+FROM pedido p
+JOIN usuario u ON p.usuario = u.email
+JOIN localidad l ON u.localidad = l.codLoc
+JOIN provincia pr ON l.provincia = pr.codP;
+
+-- T05.004-	Nombre	de	provincia	y	nombre	de	localidad	ordenados	por	provincia	y	localidad	
+-- (usando	join)	de	las	provincias	de	Aragón	y	de	localidades	cuyo	nombre	comience	por	"B".	
+-- T05.005-	Apellidos	y	nombre	de	los	usuarios	y,	si	tienen,	pedido	que	han	realizado.	
+-- T05.006-	Código	y	nombre	de	los	artículos,	si	además	es	una	cámara,	mostrar	también	la	
+-- resolución	y	el	sensor.	
+-- T05.007-	Código,	nombre	y	precio	de	venta	al	público	de	los	artículos,	si	además	se	trata	
+-- de	un	objetivo	mostrar	todos	sus	datos.	
+-- T05.008-	Muestra	las	cestas	del	año	2010	junto	con	el	nombre	del	artículo	al	que	
+-- referencia	y	su	precio	de	venta	al	público.	
+-- T05.009-	Muestra	toda	la	información	de	los	artículos.	Si	alguno	aparece	en	una	cesta	del	
+-- año	2010	muestra	esta	información.	
+-- T05.010-	Disponibilidad	en	el	stock	de	cada	cámara	junto	con	la	resolución	de	todas	las	
+-- cámaras.	
+-- T05.011-	Código	y	nombre	de	los	artículos	que	no	tienen	marca.	
+-- T05.012-	Código,	nombre	y	marca	de	todos	los	artículos,	tengan	o	no	marca.	
+-- T05.013-	Código,	nombre,	marca	y	empresa	responsable	de	la	misma	de	todos	los	
+-- artículos.	Si	algún	artículo	no	tiene	marca	debe	aparecer	en	el	listado	con	esta	información	
+-- vacía.	
+-- T05.014-	Información	de	todos	los	usuarios	de	la	comunidad	valenciana	cuyo	nombre	
+-- empiece	por	'P'	incluyendo	la	dirección	de	envío	en	caso	de	que	la	tenga.	
+-- T05.015-	Código	y	nombre	de	los	artículos,	y	código	de	pack	en	el	caso	de	que	pertenezca	
+-- a	alguno.	
+-- T05.016-	Usuarios	y	pedidos	que	han	realizado.	
+-- T05.017-	Información	de	aquellos	usuarios	de	la	comunidad	valenciana	(códigos	03,	12	y	
+-- 46)	cuyo	nombre	empiece	por	'P'	que	tienen	dirección	de	envío	pero	mostrando,	a	la	
+-- derecha,	todas	las	direcciones	de	envío	de	la	base	de	datos

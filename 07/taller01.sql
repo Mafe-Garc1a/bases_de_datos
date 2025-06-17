@@ -62,7 +62,25 @@ BEGIN
 END ;
 //
 DELIMITER ;
+DELIMITER //
+CREATE PROCEDURE actualizar_venta(p_id_empleado INT ,P_id_producto INT ,p_cantidad  INT )
+BEGIN 
+    DECLARE V_total_viejo FLOAT UNSIGNED;
+    DECLARE V_total_actual FLOAT UNSIGNED;
+    DECLARE V_cantidad_actual INT UNSIGNED;
+    DECLARE V_cantidad_vieja_empleado INT UNSIGNED;
+     SELECT total INTO V_total_viejo FROM ventas WHERE id_producto=p_id_producto;
+     UPDATE ventas SET V_cantidad_actual=NEW.p_cantidad , total=(SELECT total_ventas(p_id_producto,V_cantidad_actual));
 
+      SELECT total_cant_productos INTO V_cantidad_vieja_empleado FROM empleados WHERE id_empleado=NEW.p_id_empleado;
 
+    UPDATE empleados SET 
+    total_ventas_dinero = total_ventas_dinero-V_total_viejo+  (SELECT total_ventas(p_id_producto, p_cantidad)),
+    total_cant_productos = total_cant_productos-V_cantidad_vieja_empleado + p_cantidad
+    WHERE id_empleado = p_id_empleado;
+    
+END;
+//
+DELIMITER ;
 
 
