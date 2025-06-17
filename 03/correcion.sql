@@ -58,3 +58,9 @@ SELECT pedido.numPedido , pedido.usuario , pedido.fecha , linped.articulo , linp
 SELECT pedido.numPedido , pedido.usuario , pedido.fecha ,linped.articulo ,linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON pedido.numPedido=linped.numPedido WHERE  YEAR(pedido.fecha)>='2010' AND MONTH(pedido.fecha)>='08';
 --T04.003-	Toda	la	información	de	los	pedidos	realizados	entre	agosto	y	octubre	de	2010.
 SELECT pedido.numPedido , pedido.usuario , pedido.fecha ,linped.articulo ,linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON linped.numPedido=pedido.numPedido WHERE MONTH(pedido.fecha)>='08' AND MONTH(pedido.fecha)<='10' AND YEAR(pedido.fecha)='2010' ORDER by numPedido ;
+--T04.004-	Toda	la	información	de	los	pedidos	realizados	el	3	de	marzo	o	el	27	de	octubre	de	2010.
+SELECT pedido.numPedido , pedido.usuario , pedido.fecha ,linped.articulo ,linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON linped.numPedido=pedido.numPedido WHERE MONTH(pedido.fecha)='03' AND DAY(pedido.fecha)='03'  OR MONTH(pedido.fecha)='10' AND DAY(pedido.fecha)='27'AND YEAR(pedido.fecha)='2010' ORDER by numPedido ;
+--T04.005-	Toda	la	información	de	los	pedidos	realizados	el	3	de	marzo	o	el	27	de	octubre	de	2010,	y	que	han	sido	realizados	por	usuarios	del	dominio	"cazurren"	
+SELECT pedido.numPedido , pedido.usuario , pedido.fecha , linped.articulo , linped.cantidad , linped.precio FROM pedido INNER JOIN linped ON linped.numPedido=pedido.numPedido WHERE DAY(pedido.fecha)='03'AND MONTH(pedido.fecha)='03' OR DAY(pedido.fecha)='27' AND MONTH(pedido.fecha)='10' AND YEAR(pedido.fecha)='2010' AND pedido.usuario LIKE '%@cazurren%';
+--T04.006-	¿En	qué	día	y	hora	vivimos?	
+SELECT CURDATE() AS fecha , CURTIME() AS hora;

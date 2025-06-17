@@ -21,7 +21,7 @@ CREATE TABLE ventas(
     fecha DATE,
     id_producto INT,
     cantidad INT,
-    totoal FLOAT(12,2),
+    total FLOAT(12,2),
     PRIMARY KEY (id_venta),
     FOREIGN KEY (id_empleado) REFERENCES empleados (id_empleado),
     FOREIGN KEY (id_producto) REFERENCES productos (id_producto)
@@ -37,14 +37,32 @@ CREATE TABLE ventas(
 
 -----crear 
 DELIMITER //
-CREATE FUNCTION total_ventas(    , cantidad INT)
-RETURN total FLOAT , total_cantidad INT ; 
+CREATE FUNCTION total_ventas(p_id_producto, p_cantidad INT)
+RETURN total FLOAT ; 
+BEGIN 
+   DECLARE v_total FLOAT
+   --SE HACE ESTO PARA BUSCAR EL ID QUE INGRESARON Y QUE NO SE CAMBIE OTRO PRODUCTO
+   SELECT precio INTO FROM producto WHERE id_producto=p_id_producto;
+   SET v_total=v_precio*p_cantidad;
+   RETURN v_total
+END;
 //
 DELIMITER ;
+-----
 DELIMITER //
-CREATE PROCEDURE insertar_venta(id_venta INT , id_empleado INT, fecha DATE , id_producto INT , cantidad INT , totoal FLOAT)
+CREATE PROCEDURE insertar_venta(p_id_empleado INT ,P_id_producto INT ,p_cantidad  INT )
 BEGIN
-    
-        
+    INSERT INTO ventas(id_empleado, fecha, id_producto, cantidad, total)
+    VALUES(p_id_empleado,CURDATE(),p_id_producto,p_cantidad,(SELECT total_ventas(p_id_producto,p_cantidad)));
+    UPDATE empleados SET 
+    total_ventas_dinero = total_ventas_dinero + (SELECT total_ventas(p_id_producto, p_cantidad)),
+    total_cant_productos = total_cant_productos + p_cantidad
+    WHERE id_empleado = p_empleado;
+
+END ;
 //
 DELIMITER ;
+
+
+
+
