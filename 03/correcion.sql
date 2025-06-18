@@ -126,6 +126,7 @@ ORDER BY semana;
 -- Si DATEDIFF da 9125 días → 9125 / 365 = 25.0 → FLOOR(25.0) → 25 años
 
 -- Si da 9110 días → 9110 / 365 ≈ 24.9 → FLOOR(24.9) → 24 años
+---EL DATEDIFF RECIBE 2 PARAMETROS DNDE HAY UNA FECHA INICIAL Y UNA FINAL (NUMERO ENTERO)
 SELECT nombre, apellidos,
        FLOOR(DATEDIFF(CURDATE(), nacido)/365) AS edad
 FROM usuario
@@ -133,8 +134,7 @@ WHERE email LIKE '%@dlsi.ua.es'
 ORDER BY edad ;
 
 -- T04.016-	Email	y	cantidad	de	días	que	han	pasado	desde	los	pedidos	realizados	por	cada	usuario	hasta	la	fecha	de	cada	cesta	que	también	sea	suya.	Eliminad	duplicados.	
-SELECT DISTINCT u.email,
-       DATEDIFF(c.fecha, p.fecha) AS dias_diferencia
+SELECT DISTINCT u.email, DATEDIFF(c.fecha, p.fecha) AS dias_diferencia
 FROM usuario u
 JOIN pedido p ON u.email = p.usuario
 JOIN cesta c ON u.email = c.usuario
@@ -143,7 +143,7 @@ WHERE c.fecha >= p.fecha;
 -- T04.017-	Información	sobre	los	usuarios	menores	de	25	años.	
 SELECT *
 FROM usuario
-WHERE TIMESTAMPDIFF(YEAR, fechaNac, CURDATE()) < 25;
+WHERE TIMESTAMPDIFF(YEAR, nacido, CURDATE())= < 25;
 
 -- T04.018-	Número	de	pedido,	usuario	y	fecha	(dd/mm/aaaa)	al	que	se	le	solicitó	para	los	pedidos	que	se	realizaron	durante	la	semana	del	7	de	noviembre	de	2010.	
 SELECT numPedido, usuario,
@@ -197,10 +197,13 @@ JOIN localidad l ON u.localidad = l.codLoc
 JOIN provincia pr ON l.provincia = pr.codP;
 
 -- T05.004-	Nombre	de	provincia	y	nombre	de	localidad	ordenados	por	provincia	y	localidad	
--- (usando	join)	de	las	provincias	de	Aragón	y	de	localidades	cuyo	nombre	comience	por	"B".	
+-- (usando	join)	de	las	provincias	de	Aragón	y	de	localidades	cuyo	nombre	comience	por	"B".
+SELECT provincia.nombre ,localidad.pueblo FROM provincia RIGHT JOIN localidad ON provincia.codp=localidad.provincia WHERE provincia.nombre LIKE '$Arag%'	AND  localidad.pueblo LIKE 'b%' ORDER BY provincia.nombre, localidad.pueblo ;
 -- T05.005-	Apellidos	y	nombre	de	los	usuarios	y,	si	tienen,	pedido	que	han	realizado.	
+  SELECT usuario.nombre ,usuario.apellidos ,pedido.numPedido FROM usuario RIGHT JOIN pedido ON usuario.email=pedido.usuario ORDER BY numPedido ;
 -- T05.006-	Código	y	nombre	de	los	artículos,	si	además	es	una	cámara,	mostrar	también	la	
 -- resolución	y	el	sensor.	
+SELECT articulo.cod , articulo.nombre , camara.resolucion,camara.sensor FROM articulo LEFT JOIN camara ON camara.cod=articulo.cod ;
 -- T05.007-	Código,	nombre	y	precio	de	venta	al	público	de	los	artículos,	si	además	se	trata	
 -- de	un	objetivo	mostrar	todos	sus	datos.	
 -- T05.008-	Muestra	las	cestas	del	año	2010	junto	con	el	nombre	del	artículo	al	que	
