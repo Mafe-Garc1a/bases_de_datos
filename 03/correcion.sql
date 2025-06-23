@@ -206,6 +206,7 @@ SELECT provincia.nombre ,localidad.pueblo FROM provincia RIGHT JOIN localidad ON
 SELECT articulo.cod , articulo.nombre , camara.resolucion,camara.sensor FROM articulo LEFT JOIN camara ON camara.cod=articulo.cod ;
 -- T05.007-	Código,	nombre	y	precio	de	venta	al	público	de	los	artículos,	si	además	se	trata	
 -- de	un	objetivo	mostrar	todos	sus	datos.	
+SELECT articulo.cod , articulo.nombre , articulo.pvp , objetivo.tipo, objetivo.montura FROM articulo LEFT JOIN objetivo ON objetivo.cod=articulo.cod ;
 -- T05.008-	Muestra	las	cestas	del	año	2010	junto	con	el	nombre	del	artículo	al	que	
 -- referencia	y	su	precio	de	venta	al	público.	
 -- T05.009-	Muestra	toda	la	información	de	los	artículos.	Si	alguno	aparece	en	una	cesta	del	
