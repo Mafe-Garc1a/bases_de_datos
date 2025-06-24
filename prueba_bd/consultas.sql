@@ -242,7 +242,7 @@ INSERT INTO empleados (nombre, apellido, cargo, area, salario, fecha_contrato) V
 SELECT pacientes.nombre AS nombre_paciente ,pacientes.apellido AS apellido_paciente, doctores.nombre AS nombre_doctor ,doctores.apellido AS apellido_doctor , Citas.fecha , citas.hora FROM citas INNER JOIN Pacientes ON pacientes.id_paciente=citas.id_cita INNER JOIN Doctores ON doctores.id_doctor=citas.id_cita;
 
 --doctores que no tienen citas
-SELECT doctores.nombre ,doctores.apellido ,doctores.especialidad FROM doctores LEFT  JOIN citas ON citas.id_cita=doctores.id_doctor WHERE citas.id_doctor IS NULL;
+SELECT doctores.nombre ,doctores.apellido ,doctores.especialidad ,Citas.id_cita FROM doctores LEFT  JOIN citas ON citas.id_cita=doctores.id_doctor WHERE citas.id_doctor IS NULL;
 --informacion de los pacientes  que habitacin  esta  ,que  aun no han salido de hospitaizacion
 SELECT pacientes.nombre , pacientes.apellido, habitaciones.id_habitacion ,ingresos.fecha_ingreso FROM ingresos INNER JOIN pacientes ON  ingresos.id_paciente=pacientes.id_paciente INNER JOIN  Habitaciones ON habitaciones.id_habitacion=ingresos.id_habitacion WHERE ingresos.fecha_egreso IS NULL;
 --total pacientes registrados y numero de  citas por estado y el total
@@ -254,23 +254,14 @@ SELECT ROuND(AVG(salario),2) AS promedio , MAX(salario) AS maximo , MIN(salario)
 --pacientes que tienen mas de una cita
 SELECT pacientes.nombre , pacientes.apellido , COUNT(citas.id_cita) AS cantidad_cita FROM pacientes INNER JOIN citas ON citas.id_paciente=pacientes.id_paciente  ORDER BY citas.id_paciente HAVING COUNT(citas.id_cita)>1;
 
--- Total de citas por mes y estado, mostrando solo los meses con más de 5 citas
-SELECT MONTH(fecha) AS Mes ,estado , COUNT(id_cita)  FROM citas GROUP BY MONTH(fecha) estado HAVING COUNT(id_cita)>5 ;
+-- Total de citas por mes, mostrando solo los meses con más de 5 citas
+SELECT MONTH(fecha) AS Mes  , COUNT(id_cita)  FROM citas GROUP BY MONTH(fecha)  HAVING COUNT(id_cita)>5 ;
 --Pacientes que han sido internados más de una vez y cuántos días ha estado en total , Y informacion de la habitacion en que estuvo
-SELECT pacientes.nombre , pacientes.apellido.Habitaciones.Numero,Habitaciones.tipo , COUNT(DATEDIFF(ingresos.fecha_ingreso,ingresos.fecha_egreso)/365) AS dias FROM ingresos INNER JOIN pacientes ON pacientes.id_paciente=ingresos.id_paciente INNER JOIN habitaciones ON habitaciones.id_habitacion=ingresos.id_habitacion GROUP BY ingresos.id_ingreso HAVING COUNT(DATEDIFF(ingresos.fecha_ingreso,ingresos.fecha_egreso)/365) >1 ;
+SELECT pacientes.nombre , pacientes.apellido,Habitaciones.Numero,Habitaciones.tipo , COUNT(DATEDIFF(ingresos.fecha_ingreso,ingresos.fecha_egreso)/365) AS dias , COUNT(ingresos.id_paciente) AS veces_internado FROM ingresos INNER JOIN pacientes ON pacientes.id_paciente=ingresos.id_paciente INNER JOIN habitaciones ON habitaciones.id_habitacion=ingresos.id_habitacion GROUP BY ingresos.id_ingreso HAVING COUNT(ingresos.id_paciente)  >1 ;
 
--- Doctores que han recetado más de 5 medicamentos distintos
+---informacion de citas agendadas  dese el 20-06-2025 hasta  27-06-2025 que su estaado es programda
+SELECT pacientes.nombre , pacientes.apellido , doctores.nombre,doctores.apellido ,doctores.especialidad , citas.fecha ,citas.hora , citas.motivo FROM citas INNER JOIN pacientes ON  pacientes.id_paciente =citas.id_paciente INNER JOIN doctores ON doctores.id_doctor=citas.id_doctor WHERE YEAR(Citas.fecha)='2025' AND MONTH(citas.fecha)='06' AND DAY(citas.fecha) >'19' AND  DAY(citas.fecha) <'28'  AND citas.estado='programada' ORDER BY citas.fecha desc;
 
---Pacientes con más de 2 citas atendidas, y el total de medicamentos que han recibido
+--ordenar fecha de nacimiento pacientes en  ingresos mostrando en que habitacion se encuentra y el motivo
+SELECT pacientes.nombre ,pacientes.apellido, pacientes.fecha_nacimiento, habitaciones.id_habitacion , habitaciones.tipo , ingresos.motivo ,ingresos.fecha_ingreso,ingresos.fecha_egreso FROM ingresos INNER JOIN pacientes ON pacientes.id_paciente=ingresos.id_paciente INNER JOIN habitaciones ON habitaciones.id_habitacion=ingresos.id_habitacion ORDER BY pacientes.fecha_nacimiento ASC;
 
---nombres de los doctores que han atendido más de 3 consultas y el total de medicamentos diferentes que han recetado.
-
---Por cada especialidad médica, muestra el número total de consultas realizadas, el número de medicamentos recetados en total en esas consultas, y el promedio de medicamentos por consulta.
-
---Para cada receta, muestra el nombre del paciente, el doctor que la prescribió, el número de medicamentos en esa receta y el total de días que durarán todos los medicamentos juntos (suma de duración).
-
---Muestra los doctores que nunca han hecho una consulta, pero que tienen citas programadas o canceladas.
-
---Doctores que han atendido a pacientes que sí han sido internados
-
--- Recetas que contienen al medicamento más recetado

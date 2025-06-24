@@ -1,0 +1,1 @@
+--ner join , left join gruop by uni8r 3 tablas inner joiin , una consulta con left join , un a conslta con group by ,1 consulta con having ,rango fecha y orden 
