@@ -141,9 +141,9 @@ JOIN cesta c ON u.email = c.usuario
 WHERE c.fecha >= p.fecha;
 
 -- T04.017-	Información	sobre	los	usuarios	menores	de	25	años.	
-SELECT *
+SELECT nombre , DATEDIFF(CURDATE(), nacido)/365 AS dias 
 FROM usuario
-WHERE TIMESTAMPDIFF(YEAR, nacido, CURDATE())= < 25;
+GROUP BY nombre HAVING (DATEDIFF(CURDATE(), nacido)/365)<25;
 
 -- T04.018-	Número	de	pedido,	usuario	y	fecha	(dd/mm/aaaa)	al	que	se	le	solicitó	para	los	pedidos	que	se	realizaron	durante	la	semana	del	7	de	noviembre	de	2010.	
 SELECT numPedido, usuario,
@@ -172,8 +172,8 @@ JOIN pedido p ON u.email = p.usuario
 JOIN cesta c ON u.email = c.usuario
 WHERE EXISTS (
   SELECT 1
-  FROM contiene
-  WHERE contiene.cesta = c.id
+  FROM articulo
+  WHERE articulo.cod = c.articulo
 );
 
 -- T05.001-	Número	de	pedido	e	identificador,	apellidos	y	nombre	del	usuario	que	realiza	el	 pedido	(usando	join).
@@ -206,20 +206,28 @@ SELECT provincia.nombre ,localidad.pueblo FROM provincia RIGHT JOIN localidad ON
 SELECT articulo.cod , articulo.nombre , camara.resolucion,camara.sensor FROM articulo LEFT JOIN camara ON camara.cod=articulo.cod ;
 -- T05.007-	Código,	nombre	y	precio	de	venta	al	público	de	los	artículos,	si	además	se	trata	
 -- de	un	objetivo	mostrar	todos	sus	datos.	
-SELECT articulo.cod , articulo.nombre , articulo.pvp , objetivo.tipo, objetivo.montura FROM articulo LEFT JOIN objetivo ON objetivo.cod=articulo.cod ;
+SELECT articulo.cod , articulo.nombre , articulo.pvp , objetivo.tipo, objetivo.montura FROM articulo LEFT JOIN objetivo ON objetivo.cod=articulo.cod;
 -- T05.008-	Muestra	las	cestas	del	año	2010	junto	con	el	nombre	del	artículo	al	que	
 -- referencia	y	su	precio	de	venta	al	público.	
+SELECT cesta.articulo , cesta.usuario , cesta.fecha , articulo.nombre ,articulo.pvp FROM cesta INNER JOIN articulo ON articulo.cod = cesta.articulo WHERE  YEAR(cesta.fecha)='2010';
 -- T05.009-	Muestra	toda	la	información	de	los	artículos.	Si	alguno	aparece	en	una	cesta	del	
 -- año	2010	muestra	esta	información.	
+SELECT articulo.cod, articulo.nombre,articulo.pvp , articulo.marca ,cesta.articulo AS cestaSI ,cesta.usuario, cesta.fecha FROM articulo LEFT JOIN cesta ON cesta.articulo =articulo.cod  ;
 -- T05.010-	Disponibilidad	en	el	stock	de	cada	cámara	junto	con	la	resolución	de	todas	las	
 -- cámaras.	
--- T05.011-	Código	y	nombre	de	los	artículos	que	no	tienen	marca.	
+SELECT stock.disponible ,articulo.nombre, camara.resolucion FROM stock INNER JOIN articulo ON stock.articulo=articulo.cod INNER JOIN camara ON camara.cod=articulo.cod ORDER BY stock.disponible ;
+-- T05.011-	Código	y	nombre	de	los	artículos	que	no	tienen	marca.
+SELECT cod ,nombre ,marca FROM articulo WHERE marca IS NULL ;	
 -- T05.012-	Código,	nombre	y	marca	de	todos	los	artículos,	tengan	o	no	marca.	
+SELECT cod ,nombre ,marca FROM articulo ;	
+
 -- T05.013-	Código,	nombre,	marca	y	empresa	responsable	de	la	misma	de	todos	los	
 -- artículos.	Si	algún	artículo	no	tiene	marca	debe	aparecer	en	el	listado	con	esta	información	
 -- vacía.	
+  SELECT articulo.cod , articulo.nombre , marca.marca , marca.empresa FROM articulo LEFT JOIN marca ON marca.marca=articulo.marca ;
 -- T05.014-	Información	de	todos	los	usuarios	de	la	comunidad	valenciana	cuyo	nombre	
 -- empiece	por	'P'	incluyendo	la	dirección	de	envío	en	caso	de	que	la	tenga.	
+SELECT nombre ,apellidos,provincia FROM usuario WHERE provincia='Valencia' AND nombre LIKE 'p%';
 -- T05.015-	Código	y	nombre	de	los	artículos,	y	código	de	pack	en	el	caso	de	que	pertenezca	
 -- a	alguno.	
 -- T05.016-	Usuarios	y	pedidos	que	han	realizado.	
